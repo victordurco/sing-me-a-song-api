@@ -19,6 +19,8 @@
             {
                 "js": "ignorePackages"
             }
-        ]
+        ],
+        "import/prefer-default-export": "off",
+        "comma-dangle": "off"
     }
 }
