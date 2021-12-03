@@ -34,7 +34,21 @@ describe('createRecommendation', () => {
 });
 
 describe('voteRecommendation', () => {
-    it ('should return false when recommendation dont exists', () => {});
+    it ('should return false when recommendation does not exists', async () => {
+        jest.spyOn(recommendationsRepository, "upVote").mockImplementationOnce(() => {
+            return null;
+        });
 
-    it ('should return true when recommendation is updated', () => {});
+        const result = await recommendationsService.voteRecommendation({id: 10, type: 'up'});
+        expect(result).toBeFalsy();
+    });
+
+    it ('should return true when recommendation is updated', async () => {
+        jest.spyOn(recommendationsRepository, "downVote").mockImplementationOnce(() => {
+            return { id: 10};
+        });
+
+        const result = await recommendationsService.voteRecommendation({id: 10, type: 'down'});
+        expect(result).toBeTruthy();
+    });
 });
