@@ -55,16 +55,17 @@ const downVote = async (id) => {
     [id]
   );
 
-  if (result.rows[0].score < -5) {
-    await connection.query(
-      `
+  return result.rows[0];
+};
+
+const deleteRecommendation = async (id) => {
+  await connection.query(
+    `
       DELETE FROM songs WHERE id = $1;
     `,
-      [id]
-    );
-  }
-
-  return result.rows[0];
+    [id]
+  );
+  return true;
 };
 
 const getHighScoreRandomRecommendation = async () => {
@@ -107,6 +108,7 @@ export {
   getRecommendationByLink,
   upVote,
   downVote,
+  deleteRecommendation,
   getRandomRecommendation,
   getHighScoreRandomRecommendation,
   getMediumScoreRandomRecommendation,

@@ -23,6 +23,7 @@ const voteRecommendation = async ({ id, type }) => {
     updated = await recommendationsRepository.upVote(id);
   } else {
     updated = await recommendationsRepository.downVote(id);
+    if (updated.score < -5) await recommendationsRepository.deleteRecommendation(id);
   }
 
   if (updated) return true;
