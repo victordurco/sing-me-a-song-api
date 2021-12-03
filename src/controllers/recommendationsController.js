@@ -1,6 +1,7 @@
 import {
   newRecommendationSchema,
   upVoteSchema,
+  getTopAmountSchema
 } from '../schemas/recommendationSchema.js';
 
 import * as recommendationsService from '../services/recommendationsService.js';
@@ -47,4 +48,30 @@ const upVoteRecommendation = async (req, res) => {
   }
 };
 
-export { createRecomendation, upVoteRecommendation };
+const getRandom = async (req, res) => {
+  try {
+    const recommendation = await recommendationsService.getRandom();
+    return res.status(200).send(recommendation);
+  } catch (error) {
+    return res.sendStatus(500);
+  }
+};
+
+const getTopAmount = async (req, res) => {
+  try {
+    const { amount } = req.params;
+    const validation = getTopAmountSchema.validate(req.params);
+
+    if (validation.error) {
+      return res.sendStatus(400);
+    }
+
+    const tops = await recommendationsService.getTops(amount);
+    return res.status(200).send(tops);
+  } catch (error) {
+    return res.sendStatus(500);
+  }
+};
+export {
+  createRecomendation, upVoteRecommendation, getRandom, getTopAmount
+};

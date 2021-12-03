@@ -19,4 +19,8 @@ app.post(
   recommendationsController.upVoteRecommendation
 );
 
+app.get('/recommendations/random', recommendationsController.getRandom);
+
+app.get('/recommendations/top/:amount', recommendationsController.getTopAmount);
+
 export default app;

@@ -24,4 +24,30 @@ const upVote = async (id) => {
   return false;
 };
 
-export { createRecommendation, upVote };
+const getRandom = async () => {
+  if (Math.random() * 10 > 3) {
+    // 70% of the times: recommendation with score > 10
+    const scoreBiggerThan10 = await recommendationsRepository.getHighScoreRandomRecommendation();
+    if (!scoreBiggerThan10) {
+      const recommendation = await recommendationsRepository.getRandomRecommendation();
+      return recommendation;
+    }
+    return scoreBiggerThan10;
+  }
+  // 30%of the times: recommendation with 10 >= score >= -5
+  const mediumScore = await recommendationsRepository.getMediumScoreRandomRecommendation();
+  if (!mediumScore) {
+    const recommendation = await recommendationsRepository.getRandomRecommendation();
+    return recommendation;
+  }
+  return mediumScore;
+};
+
+const getTops = async (amount) => {
+  const tops = await recommendationsRepository.getTops(amount);
+  return tops;
+};
+
+export {
+  createRecommendation, upVote, getRandom, getTops
+};
