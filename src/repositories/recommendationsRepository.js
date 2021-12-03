@@ -65,6 +65,7 @@ const deleteRecommendation = async (id) => {
     `,
     [id]
   );
+  return true;
 };
 
 const getHighScoreRandomRecommendation = async () => {
