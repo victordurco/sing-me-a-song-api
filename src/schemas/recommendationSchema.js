@@ -16,4 +16,8 @@ const upVoteSchema = joi.object({
   id: joi.number().min(1).required(),
 });
 
-export { newRecommendationSchema, upVoteSchema };
+const getTopAmountSchema = joi.object({
+  amount: joi.number().min(1).required(),
+});
+
+export { newRecommendationSchema, upVoteSchema, getTopAmountSchema };

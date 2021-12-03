@@ -46,9 +46,69 @@ const upVote = async (id) => {
   return result.rows[0];
 };
 
+const downVote = async (id) => {
+  const result = await connection.query(
+    `
+    UPDATE songs SET score = score - 1 WHERE id = $1
+    RETURNING *;
+  `,
+    [id]
+  );
+
+  if (result.rows[0].score < -5) {
+    await connection.query(
+      `
+      DELETE FROM songs WHERE id = $1;
+    `,
+      [id]
+    );
+  }
+
+  return result.rows[0];
+};
+
+const getHighScoreRandomRecommendation = async () => {
+  const highest = await connection.query(`
+    SELECT * FROM songs WHERE score > 10 LIMIT 1000;
+  `);
+
+  return highest.rows[Math.floor(Math.random() * highest.rows.length)];
+};
+
+const getMediumScoreRandomRecommendation = async () => {
+  const medium = await connection.query(`
+    SELECT * FROM songs
+    WHERE score >= -5 AND  score <= 10
+    LIMIT 1000;
+  `);
+
+  return medium.rows[Math.floor(Math.random() * medium.rows.length)];
+};
+
+const getRandomRecommendation = async () => {
+  const all = await connection.query(`
+      SELECT * FROM songs LIMIT 1000;
+    `);
+
+  return all.rows[Math.floor(Math.random() * all.rows.length)];
+};
+
+const getTops = async (amount) => {
+  const tops = await connection.query(`
+    SELECT * FROM songs ORDER BY score DESC LIMIT $1;
+  `, [amount]);
+
+  return tops.rows;
+};
+
 export {
   createRecommendation,
   getRecommendationByName,
   getRecommendationByLink,
   upVote,
+  downVote,
+  getRandomRecommendation,
+  getHighScoreRandomRecommendation,
+  getMediumScoreRandomRecommendation,
+  getTops
 };
