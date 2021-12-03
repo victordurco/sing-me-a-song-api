@@ -17,8 +17,13 @@ const createRecommendation = async ({ name, youtubeLink }) => {
   return true;
 };
 
-const upVote = async (id) => {
-  const updated = await recommendationsRepository.upVote(id);
+const voteRecommendation = async ({ id, type }) => {
+  let updated;
+  if (type === 'up') {
+    updated = await recommendationsRepository.upVote(id);
+  } else {
+    updated = await recommendationsRepository.downVote(id);
+  }
 
   if (updated) return true;
   return false;
@@ -49,5 +54,5 @@ const getTops = async (amount) => {
 };
 
 export {
-  createRecommendation, upVote, getRandom, getTops
+  createRecommendation, voteRecommendation, getRandom, getTops
 };

@@ -19,6 +19,11 @@ app.post(
   recommendationsController.upVoteRecommendation
 );
 
+app.post(
+  '/recommendations/:id/downvote',
+  recommendationsController.downVoteRecommendation
+);
+
 app.get('/recommendations/random', recommendationsController.getRandom);
 
 app.get('/recommendations/top/:amount', recommendationsController.getTopAmount);

@@ -1,7 +1,7 @@
 import {
   newRecommendationSchema,
   upVoteSchema,
-  getTopAmountSchema
+  getTopAmountSchema,
 } from '../schemas/recommendationSchema.js';
 
 import * as recommendationsService from '../services/recommendationsService.js';
@@ -39,7 +39,27 @@ const upVoteRecommendation = async (req, res) => {
   }
 
   try {
-    const voted = await recommendationsService.upVote(id);
+    const type = 'up';
+    const voted = await recommendationsService.voteRecommendation({ id, type });
+
+    if (voted) return res.sendStatus(204);
+    return res.sendStatus(404);
+  } catch (error) {
+    return res.sendStatus(500);
+  }
+};
+
+const downVoteRecommendation = async (req, res) => {
+  const { id } = req.params;
+  const validation = upVoteSchema.validate(req.params);
+
+  if (validation.error) {
+    return res.sendStatus(400);
+  }
+
+  try {
+    const type = 'down';
+    const voted = await recommendationsService.voteRecommendation({ id, type });
 
     if (voted) return res.sendStatus(204);
     return res.sendStatus(404);
@@ -73,5 +93,9 @@ const getTopAmount = async (req, res) => {
   }
 };
 export {
-  createRecomendation, upVoteRecommendation, getRandom, getTopAmount
+  createRecomendation,
+  upVoteRecommendation,
+  downVoteRecommendation,
+  getRandom,
+  getTopAmount,
 };
