@@ -2,6 +2,7 @@ import './setup.js';
 import express from 'express';
 import cors from 'cors';
 
+import serverMiddlewareError from './middlewares/serverMiddlewareErro.js';
 import * as recommendationsController from './controllers/recommendationsController.js';
 
 const app = express();
@@ -27,5 +28,7 @@ app.post(
 app.get('/recommendations/random', recommendationsController.getRandom);
 
 app.get('/recommendations/top/:amount', recommendationsController.getTopAmount);
+
+app.use(serverMiddlewareError);
 
 export default app;
