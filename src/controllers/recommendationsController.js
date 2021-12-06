@@ -6,7 +6,7 @@ import {
 
 import * as recommendationsService from '../services/recommendationsService.js';
 
-const createRecomendation = async (req, res) => {
+const createRecomendation = async (req, res, next) => {
   const { name, youtubeLink } = req.body;
   const validation = newRecommendationSchema.validate(req.body);
 
@@ -26,11 +26,11 @@ const createRecomendation = async (req, res) => {
 
     return res.sendStatus(409);
   } catch (error) {
-    return res.sendStatus(500);
+    return next(error);
   }
 };
 
-const upVoteRecommendation = async (req, res) => {
+const upVoteRecommendation = async (req, res, next) => {
   const { id } = req.params;
   const validation = upVoteSchema.validate(req.params);
 
@@ -45,11 +45,11 @@ const upVoteRecommendation = async (req, res) => {
     if (voted) return res.sendStatus(204);
     return res.sendStatus(404);
   } catch (error) {
-    return res.sendStatus(500);
+    return next(error);
   }
 };
 
-const downVoteRecommendation = async (req, res) => {
+const downVoteRecommendation = async (req, res, next) => {
   const { id } = req.params;
   const validation = upVoteSchema.validate(req.params);
 
@@ -64,20 +64,20 @@ const downVoteRecommendation = async (req, res) => {
     if (voted) return res.sendStatus(204);
     return res.sendStatus(404);
   } catch (error) {
-    return res.sendStatus(500);
+    return next(error);
   }
 };
 
-const getRandom = async (req, res) => {
+const getRandom = async (req, res, next) => {
   try {
     const recommendation = await recommendationsService.getRandom();
     return res.status(200).send(recommendation);
   } catch (error) {
-    return res.sendStatus(500);
+    return next(error);
   }
 };
 
-const getTopAmount = async (req, res) => {
+const getTopAmount = async (req, res, next) => {
   try {
     const { amount } = req.params;
     const validation = getTopAmountSchema.validate(req.params);
@@ -89,7 +89,7 @@ const getTopAmount = async (req, res) => {
     const tops = await recommendationsService.getTops(amount);
     return res.status(200).send(tops);
   } catch (error) {
-    return res.sendStatus(500);
+    return next(error);
   }
 };
 export {
